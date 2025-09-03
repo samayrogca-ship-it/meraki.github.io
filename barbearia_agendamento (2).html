@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MERAKI BARBEARIA - Agendamentos</title>
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #1c1c1c, #2e2e2e);
+      margin: 0;
+      padding: 0;
+      color: #eee;
+    }
+    header {
+      position: relative;
+      background: url('fundo.jpeg') no-repeat center center;
+      background-size: cover;
+      padding: 100px 20px;
+      text-align: center;
+      overflow: hidden;
+    }
+    header::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.7);
+      z-index: 0;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 3.5rem;
+      letter-spacing: 4px;
+      font-weight: 900;
+      text-transform: uppercase;
+      position: relative;
+      z-index: 1;
+      color: #ffd700;
+      text-shadow: 3px 3px 10px rgba(0,0,0,0.9);
+    }
+    header p {
+      margin: 12px 0 0;
+      font-size: 1.4rem;
+      font-weight: 400;
+      position: relative;
+      z-index: 1;
+      color: #f1f1f1;
+      text-shadow: 2px 2px 6px rgba(0,0,0,0.7);
+    }
+    header p strong {
+      color: #ffd700;
+      font-weight: 600;
+    }
+    main {
+      max-width: 950px;
+      margin: 40px auto;
+      background: #1f1f1f;
+      padding: 35px;
+      border-radius: 20px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+    }
+    h2 {
+      margin-top: 0;
+      color: #ffd700;
+      border-left: 5px solid #ffd700;
+      padding-left: 12px;
+      font-weight: bold;
+    }
+    label {
+      display: block;
+      margin-top: 18px;
+      font-weight: bold;
+      color: #ddd;
+    }
+    input, select, button {
+      width: 100%;
+      padding: 14px;
+      margin-top: 6px;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      outline: none;
+    }
+    input, select {
+      background: #2a2a2a;
+      color: #fff;
+    }
+    button {
+      background: #ffd700;
+      color: #111;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+      margin-top: 20px;
+    }
+    button:hover {
+      background: #e6c200;
+      transform: scale(1.05);
+    }
+    .agendamentos {
+      margin-top: 40px;
+    }
+    .agendamento {
+      background: linear-gradient(135deg, #2a2a2a, #1c1c1c);
+      padding: 22px;
+      margin-bottom: 20px;
+      border-radius: 15px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.6);
+      color: #eee;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .agendamento::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 5px;
+      height: 100%;
+      background: #ffd700;
+      border-top-left-radius: 15px;
+      border-bottom-left-radius: 15px;
+    }
+    .agendamento:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.8);
+    }
+    .agendamento h3 {
+      margin: 0 0 8px;
+      font-size: 1.3rem;
+      color: #ffd700;
+    }
+    .agendamento p {
+      margin: 4px 0;
+      font-size: 1rem;
+      color: #ccc;
+    }
+    .painel {
+      margin-top: 60px;
+      padding: 25px;
+      background: #2a2a2a;
+      border-radius: 15px;
+      box-shadow: inset 0 0 12px rgba(0,0,0,0.4);
+    }
+    .painel h2 {
+      margin-bottom: 18px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #1f1f1f;
+      color: #fff;
+    }
+    table, th, td {
+      border: 1px solid #444;
+    }
+    th, td {
+      padding: 14px;
+      text-align: left;
+    }
+    th {
+      background: #ffd700;
+      color: #111;
+    }
+    .alerta {
+      color: #ff4d4d;
+      margin-top: 12px;
+      font-weight: bold;
+    }
+    /* Menu fixo inferior */
+    .menu-bottom {
+      display: none;
+    }
+    @media (max-width: 768px) {
+      header {
+        padding: 60px 15px;
+      }
+      header h1 {
+        font-size: 2rem;
+      }
+      header p {
+        font-size: 1rem;
+      }
+      main {
+        padding: 20px;
+        margin: 20px;
+      }
+      input, select, button {
+        font-size: 1rem;
+        padding: 12px;
+      }
+      .painel {
+        overflow-x: auto;
+      }
+      .menu-bottom {
+        display: flex;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background: #111;
+        border-top: 2px solid #ffd700;
+        justify-content: space-around;
+        padding: 10px 0;
+        z-index: 1000;
+      }
+      .menu-bottom button {
+        background: none;
+        border: none;
+        color: #ffd700;
+        font-size: 1.2rem;
+        font-weight: bold;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .menu-bottom button i {
+        font-size: 1.5rem;
+        margin-bottom: 4px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>MERAKI BARBEARIA</h1>
+    <p>Agende seu horário com praticidade!</p>
+    <p><strong>Horário de atendimento:</strong> Segunda a Sábado, das 14h às 20h</p>
+  </header>
+
+  <main>
+    <h2 id="agendar">Agendar Horário</h2>
+    <form id="form-agendamento">
+      <label>Nome:</label>
+      <input type="text" id="nome" required>
+
+      <label>Telefone:</label>
+      <input type="tel" id="telefone" required>
+
+      <label>Serviço:</label>
+      <select id="servico" required>
+        <option value="Corte de Cabelo">Corte de Cabelo</option>
+        <option value="Barba">Barba</option>
+        <option value="Corte + Barba">Corte + Barba</option>
+      </select>
+
+      <label>Data:</label>
+      <input type="date" id="data" required>
+
+      <label>Hora:</label>
+      <select id="hora" required></select>
+
+      <button type="submit">Agendar</button>
+      <div id="alerta" class="alerta"></div>
+    </form>
+
+    <div class="agendamentos" id="agendados">
+      <h2>Horários Agendados</h2>
+      <div id="lista-agendamentos"></div>
+    </div>
+
+    <div class="painel" id="painel">
+      <h2>Painel do Barbeiro</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Cliente</th>
+            <th>Telefone</th>
+            <th>Serviço</th>
+            <th>Data</th>
+            <th>Hora</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody id="tabela-agendamentos"></tbody>
+      </table>
+    </div>
+  </main>
+
+  <!-- Menu fixo inferior para celular -->
+  <div class="menu-bottom">
+    <button onclick="document.getElementById('agendar').scrollIntoView({behavior: 'smooth'})">
+      <i class="fa-solid fa-scissors"></i>
+      Agendar
+    </button>
+    <button onclick="document.getElementById('agendados').scrollIntoView({behavior: 'smooth'})">
+      <i class="fa-solid fa-clock"></i>
+      Agendados
+    </button>
+    <button onclick="document.getElementById('painel').scrollIntoView({behavior: 'smooth'})">
+      <i class="fa-solid fa-clipboard-list"></i>
+      Painel
+    </button>
+  </div>
+
+  <script>
+    const form = document.getElementById('form-agendamento');
+    const dataInput = document.getElementById('data');
+    const horaSelect = document.getElementById('hora');
+    const servicoSelect = document.getElementById('servico');
+    const listaAgendamentos = document.getElementById('lista-agendamentos');
+    const tabelaAgendamentos = document.getElementById('tabela-agendamentos');
+    const alerta = document.getElementById('alerta');
+
+    const horarios = [];
+
+    // Serviços e duração
+    const servicos = {
+      "Corte de Cabelo": 30,
+      "Barba": 30,
+      "Corte + Barba": 60
+    };
+
+    // Gerar horários disponíveis
+    function gerarHorarios() {
+      horaSelect.innerHTML = '';
+      const dataSelecionada = new Date(dataInput.value);
+      if (!dataSelecionada || isNaN(dataSelecionada)) return;
+
+      // Bloquear domingos
+      if (dataSelecionada.getDay() === 0) {
+        alerta.textContent = "A barbearia não abre aos domingos.";
+        return;
+      } else {
+        alerta.textContent = '';
+      }
+
+      const abertura = 14;
+      const fechamento = 20;
+
+      for (let hora = abertura; hora < fechamento; hora++) {
+        for (let minuto = 0; minuto < 60; minuto += 30) {
+          const horarioStr = `${hora.toString().padStart(2, '0')}:${minuto.toString().padStart(2, '0')}`;
+
+          // Bloquear horários após 19:30
+          if (hora === 19 && minuto > 30) continue;
+
+          // Verificar se já está agendado
+          const ocupado = horarios.some(h => h.data === dataInput.value && h.hora === horarioStr);
+
+          if (!ocupado) {
+            const option = document.createElement('option');
+            option.value = horarioStr;
+            option.textContent = horarioStr;
+            horaSelect.appendChild(option);
+          }
+        }
+      }
+    }
+
+    // Atualizar horários ao mudar data ou serviço
+    dataInput.addEventListener('change', gerarHorarios);
+    servicoSelect.addEventListener('change', gerarHorarios);
+
+    // Salvar agendamento
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const agendamento = {
+        nome: document.getElementById('nome').value,
+        telefone: document.getElementById('telefone').value,
+        servico: servicoSelect.value,
+        data: dataInput.value,
+        hora: horaSelect.value
+      };
+
+      // Impedir duplicação
+      const conflito = horarios.some(h => h.data === agendamento.data && h.hora === agendamento.hora);
+      if (conflito) {
+        alerta.textContent = "Este horário já está ocupado.";
+        return;
+      }
+
+      horarios.push(agendamento);
+      alerta.textContent = '';
+
+      // Mostrar na lista de cards
+      const card = document.createElement('div');
+      card.className = 'agendamento';
+      card.innerHTML = `<h3>${agendamento.nome}</h3>
+                        <p><strong>Telefone:</strong> ${agendamento.telefone}</p>
+                        <p><strong>Serviço:</strong> ${agendamento.servico}</p>
+                        <p><strong>Data:</strong> ${agendamento.data}</p>
+                        <p><strong>Hora:</strong> ${agendamento.hora}</p>`;
+      listaAgendamentos.appendChild(card);
+
+      // Mostrar na tabela
+      const row = document.createElement('tr');
+      row.innerHTML = `<td>${agendamento.nome}</td>
+                       <td>${agendamento.telefone}</td>
+                       <td>${agendamento.servico}</td>
+                       <td>${agendamento.data}</td>
+                       <td>${agendamento.hora}</td>
+                       <td><button onclick="removerAgendamento('${agendamento.data}','${agendamento.hora}', this)">Remover</button></td>`;
+      tabelaAgendamentos.appendChild(row);
+
+      form.reset();
+      horaSelect.innerHTML = '';
+    });
+
+    // Função para remover agendamento
+    function removerAgendamento(data, hora, btn) {
+      const index = horarios.findIndex(h => h.data === data && h.hora === hora);
+      if (index > -1) {
+        horarios.splice(index, 1);
+      }
+      btn.parentElement.parentElement.remove();
+      gerarHorarios();
+    }
+  </script>
+</body>
+</html>
