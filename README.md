@@ -1,1 +1,149 @@
 # meraki.github.io
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Barbearia - Agendamento</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f9;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background: #222;
+      color: #fff;
+      padding: 20px;
+      text-align: center;
+    }
+    main {
+      max-width: 600px;
+      margin: 20px auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h2 {
+      margin-top: 0;
+    }
+    label {
+      display: block;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+    input, select, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    button {
+      background: #222;
+      color: #fff;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #444;
+    }
+    .agendamentos {
+      margin-top: 20px;
+    }
+    .agendamento {
+      background: #eee;
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Barbearia Estilo</h1>
+    <p>Agende seu horário com praticidade!</p>
+  </header>
+
+  <main>
+    <h2>Agendar Horário</h2>
+    <form id="form-agendamento">
+      <label>Nome:</label>
+      <input type="text" id="nome" required>
+
+      <label>Telefone:</label>
+      <input type="tel" id="telefone" required>
+
+      <label>Serviço:</label>
+      <select id="servico" required>
+        <option value="Corte de Cabelo">Corte de Cabelo</option>
+        <option value="Barba">Barba</option>
+        <option value="Corte + Barba">Corte + Barba</option>
+      </select>
+
+      <label>Data:</label>
+      <input type="date" id="data" required>
+
+      <label>Hora:</label>
+      <input type="time" id="hora" required>
+
+      <button type="submit">Agendar</button>
+    </form>
+
+    <div class="agendamentos">
+      <h2>Horários Agendados</h2>
+      <div id="lista-agendamentos"></div>
+    </div>
+  </main>
+
+  <script>
+    const form = document.getElementById('form-agendamento');
+    const lista = document.getElementById('lista-agendamentos');
+
+    // Carregar agendamentos salvos
+    let agendamentos = JSON.parse(localStorage.getItem('agendamentos')) || [];
+    renderAgendamentos();
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const agendamento = {
+        nome: document.getElementById('nome').value,
+        telefone: document.getElementById('telefone').value,
+        servico: document.getElementById('servico').value,
+        data: document.getElementById('data').value,
+        hora: document.getElementById('hora').value
+      };
+
+      agendamentos.push(agendamento);
+      localStorage.setItem('agendamentos', JSON.stringify(agendamentos));
+
+      form.reset();
+      renderAgendamentos();
+    });
+
+    function renderAgendamentos() {
+      lista.innerHTML = '';
+      agendamentos.forEach((ag, i) => {
+        const div = document.createElement('div');
+        div.classList.add('agendamento');
+        div.innerHTML = `
+          <strong>${ag.nome}</strong> - ${ag.servico}<br>
+          📅 ${ag.data} ⏰ ${ag.hora}<br>
+          📞 ${ag.telefone}
+          <br><button onclick="removerAgendamento(${i})">Cancelar</button>
+        `;
+        lista.appendChild(div);
+      });
+    }
+
+    function removerAgendamento(index) {
+      agendamentos.splice(index, 1);
+      localStorage.setItem('agendamentos', JSON.stringify(agendamentos));
+      renderAgendamentos();
+    }
+  </script>
+</body>
+</html>
